@@ -35,7 +35,21 @@ app.post('/usuarios', async (req, res) => {
 // Rota de listar usuarios
 app.get('/usuarios', async (req, res) => {
 
-    const users = await prisma.user.findMany();
+    let users = [];
+
+    if (req.query) {
+        users = await prisma.user.findMany({
+            where: {
+                name: req.query.name,
+                age: req.query.age,
+                email: req.query.email
+                
+            }
+        })
+    } else {
+        users = await prisma.user.findMany();
+    }
+
     res.status(200).json(users); // respondendo com o status da requisição e tambem os usuarios em json
 });
 
